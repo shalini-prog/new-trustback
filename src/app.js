@@ -7,6 +7,9 @@ const statsRoutes = require('./routes/statsRoutes.js')
 
 const authRoutes = require('./routes/authRoutes.js');
 
+const aboutHeroRoutes = require('./routes/aboutHeroRoutes');
+
+
 const app = express();
 
 // Middleware
@@ -37,6 +40,7 @@ app.get('/api/test-connection', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/cta', ctaRoutes);
 app.use('/api/stat',statsRoutes);
+app.use('/api/about-hero', aboutHeroRoutes);
 
 // Error handling middleware
 app.use((error, req, res, next) => {
