@@ -3,7 +3,7 @@ const { getStats, saveStats } = require('../controllers/statsController');
 
 const router = express.Router();
 
-router.get('/', getStats);
+router.get('/:id', getStats);
 router.post('/stats', saveStats);
 
 module.exports = router;
