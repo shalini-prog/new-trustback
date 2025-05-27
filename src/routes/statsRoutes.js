@@ -1,9 +1,8 @@
 const express = require('express');
-const { getStats, saveStats } = require('../controllers/statsController');
-
 const router = express.Router();
+const { getStatsSection, saveStatsSection } = require('../controllers/statsController');
 
-router.get('/:id', getStats);
-router.post('/stats', saveStats);
+router.get('/stats', getStatsSection);
+router.post('/', saveStatsSection);
 
 module.exports = router;

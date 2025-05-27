@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { saveCTASection, getCTASection } = require('../controllers/CTAController.js');
+const ctaController = require('../controllers/ctaController.js');
 
-router.post('/cta', saveCTASection);
-router.get('/:id', getCTASection);
+// GET CTA Section
+router.get('/cta/:id', ctaController.getCTASection);
+
+// POST - Save CTA Section
+router.post('/save', ctaController.saveCTASection);
+
+// PUT - Update CTA Section
+router.post('/', ctaController.updateCTASection);
 
 module.exports = router;

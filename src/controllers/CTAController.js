@@ -1,31 +1,70 @@
-const CTASection = require('../models/ctaModel.js');
+// controllers/ctaController.js
+const CtaSection = require('../models/ctaModel'); // Adjust path as needed
+
+
+exports.getCTASection = async (req, res) => {   
+  try {     
+    const cta = await CtaSection.findOne({ id: 'main-cta' });     
+    if (!cta) {       
+      return res.status(404).json({ 
+        success: false, message: 'CTA section not found' });     
+      }     
+      res.json({ success: true, data: cta });   
+    } catch (err) {     
+      console.error(err);     
+      res.status(500).json({ success: false, message: 'Server error' });   
+    } 
+  }; 
 
 exports.saveCTASection = async (req, res) => {
   try {
-    const { id } = req.body;
-    const existing = await CTASection.findOne({ id });
+    console.log('Received CTA Data:', req.body);
 
-    if (existing) {
-      await CTASection.findOneAndUpdate({ id }, req.body);
-      return res.status(200).json({ message: 'CTA updated successfully' });
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    const newCTA = new CTASection(req.body);
-    await newCTA.save();
-    res.status(201).json({ message: 'CTA created successfully' });
+    // Check if already exists
+    let cta = await CtaSection.findOne({ id });
+    if (cta) {
+      // Update if exists
+      cta = await CtaSection.findOneAndUpdate({ id }, req.body, { new: true, runValidators: true });
+    } else {
+      // Create new
+      cta = new CtaSection(req.body);
+      await cta.save();
+    }
+
+    res.json({ success: true, message: 'CTA saved successfully', data: cta });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error saving CTA:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
-exports.getCTASection = async (req, res) => {
+
+exports.updateCTASection = async (req, res) => {
   try {
     const { id } = req.params;
-    const cta = await CTASection.findOne({ id });
-
-    if (!cta) return res.status(404).json({ error: 'CTA not found' });
-    res.status(200).json(cta);
+    const updateData = req.body;
+    
+    const cta = await CtaSection.findOneAndUpdate(
+      { id: id },
+      updateData,
+      { new: true, upsert: true }
+    );
+    
+    res.json({
+      success: true,
+      message: 'CTA section updated successfully',
+      data: cta
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error updating CTA:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
