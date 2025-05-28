@@ -1,27 +1,23 @@
 const mongoose = require('mongoose');
 
-const statSchema = new mongoose.Schema({
-  sectionSettings: {
-    title: String,
-    subtitle: String,
-    isActive: Boolean,
-    backgroundColor: String,
-    animationType: String
-  },
-  stats: [
-    {
-      id: String,
-      icon: String,
-      value: String,
-      label: String,
-      suffix: String,
-      color: String,
-      isActive: Boolean,
-      order: Number
-    }
-  ]
+const StatItemSchema = new mongoose.Schema({
+  id: String,
+  icon: String,
+  value: String,
+  label: String,
+  suffix: String,
+  color: String,
+  isActive: Boolean,
+  order: Number
+}, { _id: false });
+
+const StatsSectionSchema = new mongoose.Schema({
+  title: String,
+  subtitle: String,
+  isActive: Boolean,
+  backgroundColor: String,
+  animationType: String,
+  stats: [StatItemSchema]
 }, { timestamps: true });
 
-const StatSection = mongoose.model('StatSection', statSchema);
-
-module.exports = StatSection;
+module.exports = mongoose.model('StatsSection', StatsSectionSchema);

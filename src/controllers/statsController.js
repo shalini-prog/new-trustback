@@ -1,56 +1,23 @@
-const StatSection = require('../models/statsModel.js');
+const StatsSection = require('../models/statsModel');
 
-// GET stats
-const getStats = async (req, res) => {
+exports.getStatsSection = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    // Validate if ID is provided
-    if (!id) {
-      return res.status(400).json({ message: 'ID parameter is required' });
-    }
-    
-    const data = await StatSection.findById(id);
-    
-    // Check if data exists
-    if (!data) {
-      return res.status(404).json({ message: 'Stats not found with the provided ID' });
-    }
-    
-    res.json(data);
-  } catch (error) {
-    // Handle invalid ObjectId format (if using MongoDB)
-    if (error.name === 'CastError') {
-      return res.status(400).json({ message: 'Invalid ID format' });
-    }
-    
-    res.status(500).json({ message: 'Error fetching stats data', error: error.message });
+    const section = await StatsSection.findOne();
+    res.json(section || {});
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch stats section.' });
   }
 };
 
-// POST stats
-const saveStats = async (req, res) => {
+exports.saveStatsSection = async (req, res) => {
   try {
-
-    console.log('Received stats:', req.body);
-    const { sectionSettings, stats } = req.body;
-
-    let statDoc = await StatSection.findOne();
-    if (!statDoc) {
-      statDoc = new StatSection({ sectionSettings, stats });
-    } else {
-      statDoc.sectionSettings = sectionSettings;
-      statDoc.stats = stats;
-    }
-
-    await statDoc.save();
-    res.json({ message: 'Stats saved successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error saving stats data', error });
+    const data = req.body;
+    const updated = await StatsSection.findOneAndUpdate({}, data, {
+      upsert: true,
+      new: true
+    });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save stats section.' });
   }
-};
-
-module.exports = {
-  getStats,
-  saveStats
 };
