@@ -1,10 +1,13 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const path = require('path'); // ✅ Added this line
+
 require('./config/database');
-const ctaRoutes = require('./routes/CTARoutes.js'); 
-const statsRoutes = require('./routes/statsRoutes.js')
-const causesRoutes = require('./routes/causesRoutes.js')
+
+const ctaRoutes = require('./routes/CTARoutes.js');
+const statsRoutes = require('./routes/statsRoutes.js');
+const causesRoutes = require('./routes/causesRoutes.js'); // ✅ Already imported
 const authRoutes = require('./routes/authRoutes.js');
 
 const app = express();
@@ -13,10 +16,9 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-  origin:'*',
+  origin: '*',
   credentials: true,
 }));
-
 
 console.log("🚀 Backend server initialized...");
 app.use(express.json({ limit: '10mb' }));
@@ -34,13 +36,14 @@ app.get('/api/test-connection', (req, res) => {
   res.json({ message: 'Frontend successfully connected to backend!' });
 });
 
-// In your Express server setup
+// Static uploads route
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cta', ctaRoutes);
-app.use('/api/stat',statsRoutes);
+app.use('/api/stat', statsRoutes);
+app.use('/api/causes', causesRoutes); // ✅ Now actively used
 
 // Error handling middleware
 app.use((error, req, res, next) => {
