@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const causeSchema = new mongoose.Schema({
+  id:Number,
   title: String,
   description: String,
   image: String,

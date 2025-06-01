@@ -10,10 +10,18 @@ exports.getSection = async (req, res) => {
   }
 };
 
-// Update featured causes section
 exports.updateSection = async (req, res) => {
   try {
     const data = req.body;
+
+    console.log("Received update data:", JSON.stringify(data, null, 2));
+
+    // Convert endDate strings to Date objects
+    data.causes = data.causes.map(cause => ({
+      ...cause,
+      endDate: cause.endDate ? new Date(cause.endDate) : null
+    }));
+
     let section = await FeaturedCauseSection.findOne();
 
     if (!section) {
@@ -25,9 +33,12 @@ exports.updateSection = async (req, res) => {
     await section.save();
     res.json(section);
   } catch (err) {
+    console.error("🔥 Server error in PUT /api/causes:", err);
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 // Reset section (optional utility)
 exports.resetSection = async (req, res) => {

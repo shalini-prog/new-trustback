@@ -1,9 +1,14 @@
-// routes/eventRoutes.js
-const express = require('express');
-const router = express.Router();
-const eventController = require('../controllers/eventsController');
 
-router.get('/events', eventController.getEvents);
-router.post('/events', eventController.saveEvents);
+const express = require('express');
+
+const uploadController = require('../controllers/upload')
+const router = express.Router();
+const { getEventSection, saveEventSection } = require('../controllers/eventsController');
+
+router.get('/', getEventSection);
+router.put('/', saveEventSection);
+
+
+router.post('/upload-image', uploadController.uploadImage);
 
 module.exports = router;

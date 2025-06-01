@@ -11,9 +11,10 @@ const activityRoutes = require('./routes/activitiesRoutes.js')
 const impactRoutes = require('./routes/impactRoutes.js');
 const volunteerManagementRoutes = require('./routes/volunteer.js')
 const path = require('path');
-
+const heroSection = require('./routes/heroSection.js')
 const aboutHeroRoutes = require('./routes/aboutHeroRoutes');
-
+const testimonial = require('./routes/testimonial.js')
+const newsletterRoutes = require('./routes/newsletter.js')
 
 const app = express();
 
@@ -49,16 +50,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/cta', ctaRoutes);
 app.use('/api/stat',statsRoutes);
-<<<<<<< HEAD
 app.use('/api/about-hero', aboutHeroRoutes);
-=======
 app.use('/api/causes',causesRoutes)
 app.use('/api', eventsRoutes); 
 app.use('/api/activities', activityRoutes);
 app.use('/api/impact', impactRoutes);
 app.use('/api', volunteerManagementRoutes);
+app.use('/api/hero', heroSection);
+app.use('/api/test',testimonial)
+app.use('/api', newsletterRoutes);
 
->>>>>>> 98fdec2 (auth added)
 
 // Error handling middleware
 app.use((error, req, res, next) => {

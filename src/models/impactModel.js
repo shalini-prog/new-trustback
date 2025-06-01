@@ -1,28 +1,30 @@
 const mongoose = require('mongoose');
 
-const StatSchema = new mongoose.Schema({
+const statSchema = new mongoose.Schema({
+  id: String,
   icon: String,
   number: String,
   label: String,
   description: String,
   color: String
-}, { _id: false });
+});
 
-const AchievementSchema = new mongoose.Schema({
+const achievementSchema = new mongoose.Schema({
+  id: String,
   title: String,
   description: String,
   image: String,
   category: String,
   year: String
-}, { _id: false });
+});
 
-const ImpactSchema = new mongoose.Schema({
+const impactSchema = new mongoose.Schema({
   title: String,
   subtitle: String,
   description: String,
   backgroundImage: String,
-  stats: [StatSchema],
-  achievements: [AchievementSchema]
-}, { timestamps: true });
+  stats: [statSchema],
+  achievements: [achievementSchema]
+});
 
-module.exports = mongoose.model('Impact', ImpactSchema);
+module.exports = mongoose.model('Impact', impactSchema);

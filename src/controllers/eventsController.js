@@ -1,33 +1,52 @@
-// controllers/eventController.js
-const Event = require('../models/eventsModel');
+const EventSection = require('../models/eventsModel');
 
-// Get all events
-exports.getEvents = async (req, res) => {
+// GET all data
+const getEventSection = async (req, res) => {
   try {
-    const events = await Event.find();
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch events' });
+    let data = await EventSection.findOne();
+    if (!data) {
+      data = await EventSection.create({
+        events: [],
+        sectionSettings: {
+          sectionVisible: true,
+          sectionTitle: 'Upcoming Events',
+          sectionSubtitle: '',
+          backgroundGradient: 'from-blue-50 to-white',
+          showOnlyFeatured: true,
+          maxEventsToShow: 3,
+          showViewAllButton: true,
+          viewAllButtonText: 'View All Events',
+          viewAllButtonLink: '/events'
+        }
+      });
+    }
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch event section' });
   }
 };
 
-// Save or update all events
-exports.saveEvents = async (req, res) => {
+// SAVE or UPDATE data
+const saveEventSection = async (req, res) => {
   try {
-    const incomingEvents = req.body;
+    const { events, sectionSettings } = req.body;
+    let data = await EventSection.findOne();
 
-    // Remove 'id' field and let MongoDB handle _id
-    const eventsToSave = incomingEvents.map(event => {
-      const { id, ...eventData } = event;
-      return eventData;
-    });
+    if (data) {
+      data.events = events;
+      data.sectionSettings = sectionSettings;
+      await data.save();
+    } else {
+      data = await EventSection.create({ events, sectionSettings });
+    }
 
-    await Event.deleteMany({});
-    await Event.insertMany(eventsToSave);
-
-    res.status(200).json({ message: 'Events saved successfully' });
-  } catch (error) {
-    console.error('Save events error:', error); // Add this for debugging
-    res.status(500).json({ error: 'Failed to save events', details: error.message });
+    res.json({ message: 'Event section saved', data });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save event section' });
   }
+};
+
+module.exports = {
+  getEventSection,
+  saveEventSection
 };
