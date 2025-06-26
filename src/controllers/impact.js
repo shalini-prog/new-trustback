@@ -14,6 +14,7 @@ exports.getImpact = async (req, res) => {
 };
 
 // PUT update impact data
+
 exports.updateImpact = async (req, res) => {
   try {
     let impact = await Impact.findOne();
@@ -28,3 +29,4 @@ exports.updateImpact = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+

@@ -9,22 +9,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Storage config
-const storage = new CloudinaryStorage({
+// Video Storage config
+const videoStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'newsletter_uploads',
-    allowed_formats: ['jpg', 'png', 'jpeg'],
+    folder: 'newsletter_uploads/videos',
+    allowed_formats: ['mp4', 'mov', 'webm'],
+    resource_type: 'video', // 💡 IMPORTANT for videos
   },
 });
 
-const upload = multer({ storage });
+const uploadVideoMiddleware = multer({ storage: videoStorage });
 
-exports.uploadImage = [
-  upload.single('image'),
+exports.uploadVideo = [
+  uploadVideoMiddleware.single('video'),
   (req, res) => {
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      return res.status(400).json({ message: 'No video uploaded' });
     }
     res.status(200).json({ url: req.file.path });
   }
