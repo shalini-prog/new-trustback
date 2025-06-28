@@ -1,8 +1,0 @@
-const express = require('express');
-const router = express.Router();
-const { getCta, saveCta } = require('../controllers/causeCta.js');
-
-router.get('/', getCta);
-router.post('/', saveCta);
-
-module.exports = router;
